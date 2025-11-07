@@ -7,11 +7,11 @@ struct Hello<T> {
 }
 
 #[derive(Debug)]
-struct Hello2<T> {
+struct Hello2<T: Send> {
     inner: Hello<T>,
 }
 
-deref_mut!(<T>, Hello2<T>, T, inner);
+deref_mut!(<T: Send>, Hello2<T>, T, inner);
 
 fn main() {
     let mut hello = Hello {

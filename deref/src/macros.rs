@@ -35,7 +35,7 @@ macro_rules! deref {
         $(<
             $( $($lt:lifetime),+ )?
             $( , )?
-            $( $($param:ident),+ )?
+            $( $($param:ident $(: $bound:tt)?),+ )?
         >,)?
         $ty:ident
         $(<
@@ -49,7 +49,7 @@ macro_rules! deref {
         impl
         $(<
             $( $($lt),+, )?
-            $( $($param),+ )?
+            $( $($param $(: $bound)?),+ )?
         >)?
         std::ops::Deref for $ty
         $(<
@@ -104,7 +104,7 @@ macro_rules! deref_mut {
         $(<
             $( $($lt:lifetime),+ )?
             $( , )?
-            $( $($param:ident),+ )?
+            $( $($param:ident $(: $bound:tt)?),+ )?
         >,)?
         $ty:ident
         $(<
@@ -118,7 +118,7 @@ macro_rules! deref_mut {
         $crate::deref!(
             $(<
                 $( $($lt),+, )?
-                $( $($param),+ )?
+                $( $($param $(: $bound)?),+ )?
             >,)?
             $ty
             $(<
@@ -132,7 +132,7 @@ macro_rules! deref_mut {
         impl
         $(<
             $( $($lt),+, )?
-            $( $($param),+ )?
+            $( $($param $(: $bound)?),+ )?
         >)?
         std::ops::DerefMut for $ty
         $(<
