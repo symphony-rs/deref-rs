@@ -33,14 +33,12 @@
 macro_rules! deref {
     (
         $(<
-            $( $($lt:lifetime),+ )?
-            $( , )?
+            $( $($lt:lifetime),+, )?
             $( $($param:ident $(: $bound:tt)?),+ )?
-        >,)?
+        >)?,
         $ty:ident
         $(<
-            $( $($lt2:lifetime),+ )?
-            $( , )?
+            $( $($lt2:lifetime),+, )?
             $( $($param2:ident),+ )?
         >)?,
         $target:ty,
@@ -102,14 +100,12 @@ macro_rules! deref {
 macro_rules! deref_mut {
     (
         $(<
-            $( $($lt:lifetime),+ )?
-            $( , )?
+            $( $($lt:lifetime),+, )?
             $( $($param:ident $(: $bound:tt)?),+ )?
-        >,)?
+        >)?,
         $ty:ident
         $(<
-            $( $($lt2:lifetime),+ )?
-            $( , )?
+            $( $($lt2:lifetime),+, )?
             $( $($param2:ident),+ )?
         >)?,
         $target:ty,
