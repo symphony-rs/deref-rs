@@ -1,0 +1,13 @@
+[workspace]
+resolver = "2"
+members = ["deref*"]
+
+[workspace.package]
+edition = "2024"
+license = "MIT"
+authors = ["Ethereal <zsl99a@live.com>"]
+description = "A Rust library for dereferencing types"
+
+[workspace.dependencies]
+deref = { path = "deref" }
+deref-derives = { path = "deref-derives" }
