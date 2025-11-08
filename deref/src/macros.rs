@@ -20,7 +20,7 @@
 /// ```
 ///
 /// ```rust
-/// use deref::{deref};
+/// use deref::deref;
 ///
 /// struct SrVec<T> {
 ///     vec: Vec<T>,
@@ -29,16 +29,29 @@
 /// // Implement Deref for a single generic type
 /// deref!(<T>, SrVec<T>, Vec<T>, vec);
 /// ```
+///
+/// ```rust
+/// use deref::deref;
+///
+/// struct MyType<'a> {
+///     field: &'a usize,
+/// }
+///
+/// // Implement Deref for a regular type
+/// deref!(<'a>, MyType<'a>, &'a usize, field);
+/// ```
 #[macro_export]
 macro_rules! deref {
     (
         $(<
-            $( $($lt:lifetime),+, )?
+            $( $($lt:lifetime),+ )?
+            $( , )?
             $( $($param:ident $(: $bound:tt)?),+ )?
-        >)?,
+        >,)?
         $ty:ident
         $(<
-            $( $($lt2:lifetime),+, )?
+            $( $($lt2:lifetime),+ )?
+            $( , )?
             $( $($param2:ident),+ )?
         >)?,
         $target:ty,
@@ -67,6 +80,9 @@ macro_rules! deref {
 
 /// Macro to implement both Deref and DerefMut traits, supporting both regular types and generic types
 ///
+/// Note: This macro automatically implements both Deref and DerefMut traits.
+/// You don't need to separately use deref! when using deref_mut!.
+///
 /// # Parameters
 /// - `$ty`: The implementing type
 /// - `$target`: The target type
@@ -83,6 +99,7 @@ macro_rules! deref {
 /// struct TargetType;
 ///
 /// // Implement Deref and DerefMut for a regular type
+/// // Note: This automatically implements both Deref and DerefMut
 /// deref_mut!(MyType, TargetType, field);
 /// ```
 ///
@@ -94,18 +111,33 @@ macro_rules! deref {
 /// }
 ///
 /// // Implement Deref and DerefMut for a single generic type
+/// // Note: This automatically implements both Deref and DerefMut
 /// deref_mut!(<T>, SrVec<T>, Vec<T>, vec);
+/// ```
+///
+/// ```rust
+/// use deref::{deref_mut};
+///
+/// struct MyType<'a> {
+///     field: &'a mut usize,
+/// }
+///
+/// // Implement Deref and DerefMut for a regular type
+/// // Note: This automatically implements both Deref and DerefMut
+/// deref_mut!(<'a>, MyType<'a>, &'a mut usize, field);
 /// ```
 #[macro_export]
 macro_rules! deref_mut {
     (
         $(<
-            $( $($lt:lifetime),+, )?
+            $( $($lt:lifetime),+ )?
+            $( , )?
             $( $($param:ident $(: $bound:tt)?),+ )?
-        >)?,
+        >,)?
         $ty:ident
         $(<
-            $( $($lt2:lifetime),+, )?
+            $( $($lt2:lifetime),+ )?
+            $( , )?
             $( $($param2:ident),+ )?
         >)?,
         $target:ty,

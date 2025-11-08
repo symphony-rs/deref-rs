@@ -2,7 +2,7 @@ use deref::{DerefMut, deref_mut};
 
 #[derive(Debug, DerefMut)]
 struct Hello<T> {
-    #[deref_mut]
+    #[auto_ref]
     inner: T,
 }
 

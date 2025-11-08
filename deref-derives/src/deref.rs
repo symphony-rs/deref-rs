@@ -6,7 +6,7 @@ use syn::{Attribute, Data, DataStruct, DeriveInput, Fields, Index, Type};
 pub fn impl_deref_trait(input: &DeriveInput, is_mut: bool) -> syn::Result<TokenStream2> {
     let name = &input.ident;
     let generics = &input.generics;
-    let attr_name = if is_mut { "deref_mut" } else { "deref" };
+    let attr_name = "auto_ref"; // 统一使用 auto_ref 属性
     let trait_name = if is_mut { "DerefMut" } else { "Deref" };
 
     // Get struct fields
@@ -20,7 +20,7 @@ pub fn impl_deref_trait(input: &DeriveInput, is_mut: bool) -> syn::Result<TokenS
         }
     };
 
-    // Find the field marked with #[deref] or #[deref_mut]
+    // Find the field marked with #[auto_ref]
     let (deref_field, field_type) = find_deref_field(fields, attr_name)?;
 
     // Generate implementation code

@@ -8,6 +8,7 @@ A simple Rust autodereference implementation that provides macros and derive mac
 - **Derive macro support**: Attribute-based derive macros for more ergonomic usage
 - **Generic type support**: Works with both regular types and generic types
 - **Field access**: Supports both named fields and tuple-style field access
+- **Automatic Deref implementation**: When using `deref_mut!` or `DerefMut`, `Deref` is automatically implemented
 
 ## Installation
 
@@ -37,13 +38,14 @@ struct TargetType;
 deref!(MyType, TargetType, field);
 
 // Implement both Deref and DerefMut for MyType
+// Note: This automatically implements Deref as well
 deref_mut!(MyType, TargetType, field);
 ```
 
 #### With Generic Types
 
 ```rust
-use deref::{Deref, DerefMut};
+use deref::{deref, deref_mut};
 struct SrVec<T> {
     vec: Vec<T>,
 }
@@ -52,6 +54,7 @@ struct SrVec<T> {
 deref!(<T>, SrVec<T>, Vec<T>, vec);
 
 // Implement both Deref and DerefMut for a generic type
+// Note: This automatically implements Deref as well
 deref_mut!(<T>, SrVec<T>, Vec<T>, vec);
 ```
 
@@ -63,15 +66,16 @@ deref_mut!(<T>, SrVec<T>, Vec<T>, vec);
 use deref::{Deref, DerefMut};
 #[derive(Deref)]
 struct Hello<T> {
-    #[deref]
+    #[auto_ref]
     inner: T,
 }
 
 #[derive(DerefMut)]
 struct HelloMut<T> {
-    #[deref_mut]
+    #[auto_ref]
     inner: T,
 }
+// Note: DerefMut automatically implements Deref as well
 ```
 
 #### With Named Fields
@@ -80,7 +84,7 @@ struct HelloMut<T> {
 use deref::Deref;
 #[derive(Deref)]
 struct Wrapper {
-    #[deref]
+    #[auto_ref]
     data: String,
 }
 
@@ -103,7 +107,7 @@ use deref_rs::Deref;
 struct TupleWrapper(String);
 
 #[derive(Deref)]
-struct GenericTupleWrapper<T>(#[deref] T);
+struct GenericTupleWrapper<T>(#[auto_ref] T);
 
 fn main() {
     let wrapper = TupleWrapper("Hello, Tuple!".to_string());
@@ -123,7 +127,7 @@ use std::ops::Deref as DerefTrait;
 
 #[derive(Deref)]
 struct MyBox<T> {
-    #[deref]
+    #[auto_ref]
     value: T,
 }
 
@@ -151,9 +155,10 @@ fn main() {
 use deref::{Deref, DerefMut, deref_mut};
 #[derive(Debug, DerefMut)]
 struct Inner<T> {
-    #[deref_mut]
+    #[auto_ref]
     value: T,
 }
+// Note: DerefMut automatically implements Deref for Inner<T>
 
 #[derive(Debug)]
 struct Outer<T> {
@@ -161,6 +166,7 @@ struct Outer<T> {
 }
 
 // Implement DerefMut for Outer using the macro
+// Note: This automatically implements Deref as well
 deref_mut!(<T>, Outer<T>, T, inner);
 
 fn main() {
@@ -201,15 +207,19 @@ deref_mut!(TYPE, TARGET_TYPE, FIELD)
 deref_mut!(GENERIC_PARAMS, TYPE, TARGET_TYPE, FIELD)
 ```
 
+**Note**: The `deref_mut!` macro automatically implements both `Deref` and `DerefMut` traits. You don't need to separately use `deref!` when using `deref_mut!`.
+
 ### Derive Macros
 
 #### `Deref` Derive Macro
 
-Implements the `Deref` trait using the `#[deref]` attribute to mark the target field.
+Implements the `Deref` trait using the `#[auto_ref]` attribute to mark the target field.
 
 #### `DerefMut` Derive Macro
 
-Implements both `Deref` and `DerefMut` traits using the `#[deref_mut]` attribute to mark the target field.
+Implements both `Deref` and `DerefMut` traits using the `#[auto_ref]` attribute to mark the target field.
+
+**Note**: The `DerefMut` derive macro automatically implements both `Deref` and `DerefMut` traits. You don't need to separately derive `Deref` when deriving `DerefMut`.
 
 ## License
 
@@ -226,3 +236,4 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 - Basic `deref!` and `deref_mut!` macros
 - `Deref` and `DerefMut` derive macros
 - Support for generic types
+- Automatic Deref implementation when using DerefMut
